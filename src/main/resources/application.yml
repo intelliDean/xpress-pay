@@ -1,53 +1,90 @@
 spring:
   datasource:
-    url: jdbc:${DATABASE}://${DB_HOST}:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true
-    username: ${DB_USERNAME}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:pay}
+    username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
   jpa:
-    database-platform: ${DIALECT}
     hibernate:
       ddl-auto: update
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
-        dialect: ${DIALECT}
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   profiles:
     active: dev
 springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
     filter: true
-    tagsSorter: alpha
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    deep-linking: true
+    display-request-duration: true
+    default-models-expand-depth: 1
+    default-model-rendering: example
+    show-extensions: true
+    display-operation-id: false
+    persist-authorization: true
+    try-it-out-enabled: true
 server:
-  port: 9090
+  port: 8080
 
 sendinblue:
   mail:
-    api_key: ${sendinblue_api}
-    url: ${sendinblue_mail}
+    api_key: ${BREVO_API_KEY:your_brevo_api_key_here}
+    url: ${MAIL_URL:https://api.brevo.com/v3/smtp/email}
 
 app:
-  name: ${app_name}
-  email: ${app_email}
+  base-url: ${BASE_URL:http://localhost:${server.port}}
+  name: ${APP_NAME:Xpress Pay}
+  email: ${APP_EMAIL:oneblockhq@gmail.com}
 
 admin:
-  full_name: ${admin_name}
-  email: ${admin_email}
-  password: ${admin_password}
+  full_name: ${ADMIN_NAME}
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
 #  phone_number: ${admin_phone_number}
 
-access_expiration: ${access_token}
-refresh_expiration: ${refresh_token}
+token:
+  secret: ${SECRET_KEY}
+  expiration:
+    access: ${ACCESS_TOKEN_EXP:3}
+    refresh: ${REFRESH_TOKEN_EXP:168}
 
-private_key: ${private}
-public_key: ${public}
-base_url: ${url}
+private_key: ${PRIVATE}
+public_key: ${PUBLIC}
+base_url: ${URL}
+
+biller:
+  unique-code:
+    mtn: ${MTN_UNIQUE_CODE}
+    airtel: ${AIRTEL_UNIQUE_CODE}
+    glo: ${GLO_UNIQUE_CODE}
+    9mobile: ${ETISALAT_UNIQUE_CODE}
+
+xpress:
+  key:
+    private: ${PRIVATE}
+    public: ${PUBLIC}
+  api:
+    url: ${XPRESS_API_URL:https://myxpresspay.com:8097/api/}
 
 
-Jwt_Secret_Key: ${SECRET_KEY}
 
-MTN_UNIQUE_CODE: ${MTN}
-GLO_UNIQUE_CODE: ${GLO}
-AIRTEL_UNIQUE_CODE: ${AIRTEL}
-ETISALAT_UNIQUE_CODE: ${ETISALAT}
+
+#MTN_UNIQUE_CODE: ${MTN}
+#GLO_UNIQUE_CODE: ${GLO}
+#AIRTEL_UNIQUE_CODE: ${AIRTEL}
+#ETISALAT_UNIQUE_CODE: ${ETISALAT}
